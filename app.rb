@@ -20,15 +20,24 @@ end
 get '/about' do
   haml :about, :layout => :'layouts/page'
 end
-
-get '/score/:word' do
+post '/score/' do
+  game = Scrabble.new
   if params[:bonus].nil?
       bonus = "single"
   else
     bonus = params[:bonus]
   end
 puts params[:bonus]
-  score = Scrabble.new.play_word(params[:word],bonus)
-  return score.to_s
+  @word = params[:word]
+  @score = Scrabble.new.play_word(params[:word],bonus)
+  puts @score
+  if @score == false
+    @score = "Word not found"
+  end
+  haml :score, :layout => :'layouts/application'
+end
+
+get '/score/' do
+  haml :score, :layout => :'layouts/application'
 end
 

@@ -1,3 +1,5 @@
+require_relative 'word_list.rb'
+
 class Scrabble
   attr_reader :rules
   def initialize(rules = nil)
@@ -18,8 +20,13 @@ class Scrabble
 
   def play_word(word, bonus="single")
     word.downcase!
-    sum = score_by_rules(word)
-    sum *= bonus_check bonus
+    if is_word(word)
+      sum = score_by_rules(word)
+      sum *= bonus_check bonus
+      return sum
+    else
+      return false
+    end
   end
 
   def play_words(words)
@@ -41,5 +48,8 @@ class Scrabble
     end
   end
 
+  def is_word(word)
+    word_list(word)
+  end
 end
 
