@@ -15,31 +15,45 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 
 # Application routes
 get '/' do
-  @game = Scrabble.new(["c", ' ', 'b', 'b', ' ', 'g', 'e'])
+  @game = Scrabble.new
+  @game.rack= ["c", ' ', 'b', 'b', ' ', 'g', 'e']
   haml :index, :layout => :'layouts/application'
 end
 
 get '/about' do
   haml :about, :layout => :'layouts/page'
 end
-post '/score/' do
+post '/score' do
   puts "params"
   p params
-  rack = JSON.parse(params[:rack])
-  bag = JSON.parse(params[:bag])
-  unless params[:played_words].nil?
-    played_words = JSON.parse(params[:played_words])
-  else
-    played_words = []
+  @game = Scrabble.new
+  scrabble_params = params["scrabble"]
+  play_word = scrabble_params.delete "play_word"
+  score_total = scrabble_params.delete "score_total"
+  scrabble_params.each do |method, value|
+    p method
+    p value
+    @game.send("#{method}=", JSON.parse(value))
   end
-  puts "!!!: #{params[:play_words]}"
+  p @game.score_total = score_total
+  p @game.letters_bag
+  @score = @game.play_word play_word
 
-  @game = Scrabble.new(rack, bag, params[:score_total],played_words)
+  # rack = JSON.parse(params[:rack])
+  # bag = JSON.parse(params[:bag])
+  # unless params[:played_words].nil?
+  #   played_words = JSON.parse(params[:played_words])
+  # else
+  #   played_words = []
+  # end
+  # puts "!!!: #{params[:play_words]}"
 
-  bonus = params[:bonus]
-  @word = params[:word]
-  @score = @game.play_word(params[:word],bonus)
-  p @game.played_words
+  # @game = Scrabble.new(rack, bag, params[:score_total],played_words)
+
+  # bonus = params[:bonus]
+  # @word = params[:word]
+  # @score = @game.play_word(params[:word],bonus)
+  # p @game.played_words
   haml :score, :layout => :'layouts/application'
 end
 

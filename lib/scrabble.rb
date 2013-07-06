@@ -4,53 +4,83 @@ require_relative 'rules_list.rb'
 
 
 class Scrabble
-  attr_accessor :rules, :letters_bag, :rack, :score_total, :played_words
-
-  def initialize(set_rack=nil,letters_bag=nil,played_words=nil,score_total=nil,new_rules=nil)
-    if played_words.nil?
-      played_words = []
-    else
-      @played_words = played_words
-    end
-    if rules.nil?
-      @rules = rules_list
-    else
-      @rules = new_rules
-    end
-    if score_total.nil? || score_total.length == 0
-      @score_total = 0
-    else
-      @score_total = score_total.to_i
-    end
-    if set_rack.nil?
-      fill_rack
-    else
-      @rack = set_rack
-    end
-    if letters_bag.nil?
-      reset_bag
-    else
-      @letters_bag = letters_bag
-    end
+  attr_accessor :rules, :played_words
+  attr_reader :score_total
+  def initialize()
+    @rules = rules_list
+    @score_total = 0
+    @played_words = []
+    letters_bag
+    rack
+    # ,letters_bag=nil,played_words=nil,score_total=nil,new_rules=nil)
+  #   if played_words.nil?
+  #     played_words = []
+  #   else
+  #     @played_words = played_words
+  #   end
+  #   if rules.nil?
+  #
+  #   else
+  #     @rules = new_rules
+  #   end
+  #   if score_total.nil? || score_total.length == 0
+  #     @score_total = 0
+  #   else
+  #     @score_total = score_total.to_i
+  #   end
+  end
+  def score_total=(total)
+    total = total.to_i if total.class == String
+    @score_total = total
+  end
+  def letters_bag
+     reset_bag if @letters_bag.nil?
+     return @letters_bag
+  end
+  def letters_bag=(new_bag)
+     @letters_bag = new_bag
+  end
+  def rack
+   fill_rack if @rack.nil?
+   return @rack
+  end
+  def rack=(new_rack)
+    @rack = new_rack
+  end
+  def fill_rack
+    rack_size = 7
+    @rack ||= []
+    #get the minimum needed to fill the rack or the min in the bag
+    tiles_to_get = [@letters_bag.length, (rack_size-@rack.length)].min
+    # tiles_to_get.times do
+    #   index = rand(@letters_bag.length-1)
+    #   @rack << @letters_bag.delete_at(index)
+    # end
+    @rack += @letters_bag.shuffle.take(tiles_to_get)
+    return @rack
   end
 
-  def play_word(word, bonus="single")
+  def play_word(hash)
+    word = hash['word']
+    blanks = hash['blanks']
+    if hash["bonus"].nil?
+      bonus = "single"
+    else
+      bonus = hash["bonus"]
+    end
+    puts word
     word.downcase!
     if in_list?(word)
      # in_rack?(word)
-      word = sub_blanks(word)
+      # word = sub_blanks(word)
       sum = score_by_rules(word)
       sum *= bonus_check bonus
       @score_total += sum
-      puts "before push"
-      p word
       @played_words << word
-      puts "after push"
-      p
       fill_rack
       return sum
     else
-      return "Not a valid!"
+      return "Not a word valid!"
     end
   end
 
@@ -78,18 +108,7 @@ class Scrabble
       @rack.delete_at(index)
   end
 
-  def fill_rack
-    rack_size = 7
-    @rack ||= []
-    #get the minimum needed to fill the rack or the min in the bag
-    tiles_to_get = [@letters_bag.length, (rack_size-@rack.length)].min
-    # tiles_to_get.times do
-    #   index = rand(@letters_bag.length-1)
-    #   @rack << @letters_bag.delete_at(index)
-    # end
-    @rack += @letters_bag.shuffle.take(tiles_to_get)
-    return @rack
-  end
+
 
   def blanks_in_rack
     @rack.reduce(0) do |sum, letter|
