@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'haml'
 require './lib/scrabble'
+require 'json'
 # Helpers
 require './lib/render_partial'
 
@@ -14,6 +15,7 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 
 # Application routes
 get '/' do
+  @game = Scrabble.new(["c", ' ', 'b', 'b', ' ', 'g', 'e'])
   haml :index, :layout => :'layouts/application'
 end
 
@@ -21,19 +23,23 @@ get '/about' do
   haml :about, :layout => :'layouts/page'
 end
 post '/score/' do
-  game = Scrabble.new
-  if params[:bonus].nil?
-      bonus = "single"
+  puts "params"
+  p params
+  rack = JSON.parse(params[:rack])
+  bag = JSON.parse(params[:bag])
+  unless params[:played_words].nil?
+    played_words = JSON.parse(params[:played_words])
   else
-    bonus = params[:bonus]
+    played_words = []
   end
-puts params[:bonus]
+  puts "!!!: #{params[:play_words]}"
+
+  @game = Scrabble.new(rack, bag, params[:score_total],played_words)
+
+  bonus = params[:bonus]
   @word = params[:word]
-  @score = Scrabble.new.play_word(params[:word],bonus)
-  puts @score
-  if @score == false
-    @score = "Word not found"
-  end
+  @score = @game.play_word(params[:word],bonus)
+  p @game.played_words
   haml :score, :layout => :'layouts/application'
 end
 

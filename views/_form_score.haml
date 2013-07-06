@@ -1,9 +1,26 @@
-
 %form{action: "/score/", method: "post"}
-  %label{name: "word"} Enter A word to score
-  %input{type: "text", name: "word", id: "word"}
-  %select{name: "bonus"}
-    %option{value: "single"} Single
-    %option{value: "double"} Double
-    %option{value: "triple"} Triple
-  %button{type: "submit"} Submit
+  .fieldset
+    %select{name: "bonus"}
+      %option{value: "single"} Single
+      %option{value: "double"} Double
+      %option{value: "triple"} Triple
+    %button{type: "submit", class: "btn"} Submit
+  %input{name: "rack", type: "hidden", value: @game.rack}
+  %input{name: "bag", type: "hidden", value: @game.letters_bag}
+  %input{name: "score_total", type: "hidden", value: @game.score_total}
+  - unless @game.played_words.nil? || @game.played_words.length == 0
+    %input{name: "played_words", type: "hidden", value: @game.played_words}
+
+  %ul.btn-toolbar#sortable{"data-toggle" => "buttons-checkbox"}
+    - @game.rack.each_with_index do |letter, index|
+      - if letter == " "
+        %li{type:  "button", class: "ui-state-default btn btn-primary tile blank"}
+          %input{name: "tiles[]", type: "text", size: "1", class: "blank"}
+      - else
+        %li{"data-letter" => letter, "data-index" => index, class: "ui-state-default btn btn-primary tile"}
+          %input{name: "tiles[]", type:"hidden", :id => "hidden-#{index}", value: ""}
+          = letter
+
+%p
+  Total Score
+  = @game.score_total

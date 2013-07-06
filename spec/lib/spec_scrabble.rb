@@ -4,9 +4,7 @@ require 'minitest/spec'
 
 describe "word_list" do
   before do
-    @scrabble = Scrabble.new
-    @scrabble.rack = %w(c a b b a g e)
-
+    @scrabble = Scrabble.new(%w(c a b b a g e))
   end
 
   it "return 14 for word cabbage" do
@@ -25,10 +23,7 @@ describe "word_list" do
       @scrabble.play_word("cabbage", "triple").must_equal 42
   end
     it "returns false for things that are not words" do
-      @scrabble.play_word("cabage").must_equal false
-  end
-    it "returns false if there is more than one word" do
-      @scrabble.play_word("cabbage apple").must_equal false
+      @scrabble.play_word("cabage").must_equal 'Not a valid word!'
   end
   it "removes letters from rack when word is played" do
     @scrabble.rack = %w(p u a y f r e)
@@ -53,5 +48,13 @@ describe "word_list" do
     #when word is played the rack is fill up to 7
     #substacting from the bag
     @scrabble.letters_bag.length.must_equal (100 - 3)
+  end
+  it "method in_rack can substitute a blank for a letter" do
+    @sub = Scrabble.new(["c", ' ', 'b', 'b,', 'a', 'g', 'e'])
+    @sub.in_rack?("cabbage").must_equal true
+  end
+  it "can play a blank for any letter" do
+    @game = Scrabble.new(["c", ' ', 'b', 'b', 'a', 'g', 'e'])
+    @game.play_word("cabbage").must_equal 13
   end
 end

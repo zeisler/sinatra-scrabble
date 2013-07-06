@@ -1,8 +1,8 @@
 %h1 Welcome To Scrabble
 
 = partial :_form_score
-
-
-
+%p
+  Played words:
+  = @game.played_words
 %h2 Your word has been scored
 %p= "#{@word}: #{@score}"

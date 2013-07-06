@@ -1,6 +1,6 @@
 require "Shellwords"
 module WordList
-  def word_list(word)
+  def in_list?(word)
     if File.exists?('word_list.txt')
         file = "word_list.txt"
     else

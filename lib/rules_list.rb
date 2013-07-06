@@ -1,7 +1,7 @@
 module RulesList
   def rules_list
     {
-      /[\s]/ => 0,
+      /[*\w]/ => 0,
       /[aeioulnrst]/ => 1,
       /[dg]/ => 2,
       /[bcmp]/ => 3,
@@ -13,12 +13,3 @@ module RulesList
   end
 end
 
-# class Test
-#   include ScrabbleRules
-
-#   def bools
-#     rules
-#   end
-# end
-
-# puts Test.new.bools.class
