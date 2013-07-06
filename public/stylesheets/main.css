@@ -1,4 +1,7 @@
-
+.fieldset select{
+  margin-bottom: 0;
+  margin-left: 35px;
+}
 .tile.btn{
   background-color: white;
   display: inline-block;

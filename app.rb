@@ -16,7 +16,7 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 # Application routes
 get '/' do
   @game = Scrabble.new
-  @game.rack= ["c", ' ', 'b', 'b', ' ', 'g', 'e']
+  # @game.rack= ["c", ' ', 'b', 'b', ' ', 'g', 'e']
   haml :index, :layout => :'layouts/application'
 end
 
@@ -30,14 +30,20 @@ post '/score' do
   scrabble_params = params["scrabble"]
   play_word = scrabble_params.delete "play_word"
   score_total = scrabble_params.delete "score_total"
+  replace = scrabble_params.delete "replace"
   scrabble_params.each do |method, value|
     p method
     p value
     @game.send("#{method}=", JSON.parse(value))
   end
+  unless replace.nil?
+    @game.replace(replace)
+  end
+
   p @game.score_total = score_total
   p @game.letters_bag
-  @score = @game.play_word play_word
+  @score = @game.play_word play_word unless play_word["word"] == ''
+  @word = play_word["word"]
 
   # rack = JSON.parse(params[:rack])
   # bag = JSON.parse(params[:bag])

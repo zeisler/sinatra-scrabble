@@ -4,7 +4,9 @@
       %option{value: "single"} Single
       %option{value: "double"} Double
       %option{value: "triple"} Triple
-    %button{class: "btn", id: "submit_word"} Submit
+    %button{class: "btn", id: "submit_word"} Play Word
+    %button{class: "btn", id: "submit_replace_word"} Replace Letters
+
   %input{name: "scrabble[rack]", type: "hidden", value: @game.rack.to_json}
   %input{name: "scrabble[letters_bag]", type: "hidden", value: @game.letters_bag.to_json}
   %input{name: "scrabble[score_total]", type: "hidden", value: @game.score_total}
@@ -20,6 +22,8 @@
         %li{"data-letter" => letter, "data-index" => index, class: "ui-state-default btn btn-primary tile"}
           = letter
     %input{name: "scrabble[play_word][word]", type: "hidden", id: "word", value: ''}
+    %input{name: "scrabble[replace]", type: "hidden", id: "replace", value: ''}
+
 %p
   Total Score
   = @game.score_total

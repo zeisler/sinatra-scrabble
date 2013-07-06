@@ -71,7 +71,8 @@ class Scrabble
     puts word
     word.downcase!
     if in_list?(word)
-     # in_rack?(word)
+      in_rack?(word)
+      subtract_from_rack(word)
       # word = sub_blanks(word)
       sum = score_by_rules(word)
       sum *= bonus_check bonus
@@ -102,10 +103,21 @@ class Scrabble
       value.times{ @letters_bag << letter}
     end
   end
-
-  def subtract_from_rack(letter)
+  def replace(word)
+    subtract_from_rack(word)
+    fill_rack
+  end
+  def subtract_from_rack(word)
+    blanks = blanks_in_rack
+    word.each_char do |letter|
       index = @rack.index(letter)
-      @rack.delete_at(index)
+      if index.nil? && blanks > 0
+        blanks -= 1
+        @rack.delete_at @rack.index(' ')
+      else
+        @rack.delete_at(index)
+      end
+    end
   end
 
 
@@ -138,25 +150,25 @@ class Scrabble
     return true
   end
 
-  def sub_blanks(word)
-    blanks = blanks_in_rack
-    index = 0
-    word.each_char do |letter|
-      if @rack.index(letter).nil?
-        if blanks >= 0
-          blanks -= 1
-          word[index] = " "
-          @rack.delete_at(find_blank)
-        else
-          return false
-        end
-      else
-        subtract_from_rack(letter)
-      end
-      index += 1
-    end
-    return word
-  end
+  # def sub_blanks(word)
+  #   blanks = blanks_in_rack
+  #   index = 0
+  #   word.each_char do |letter|
+  #     if @rack.index(letter).nil?
+  #       if blanks >= 0
+  #         blanks -= 1
+  #         word[index] = " "
+  #         @rack.delete_at(find_blank)
+  #       else
+  #         return false
+  #       end
+  #     else
+  #       subtract_from_rack(letter)
+  #     end
+  #     index += 1
+  #   end
+  #   return word
+  # end
 
   private
     include WordList
