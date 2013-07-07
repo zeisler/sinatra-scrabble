@@ -74,7 +74,7 @@ class Scrabble
       in_rack?(word)
       subtract_from_rack(word)
       # word = sub_blanks(word)
-      sum = score_by_rules(word)
+      sum = score_by_rules(@word_with_blanks)
       sum *= bonus_check bonus
       @score_total += sum
       @played_words << word
@@ -138,10 +138,12 @@ class Scrabble
 
   def in_rack?(word)
     blanks = blanks_in_rack
+    @word_with_blanks = word
     word.each_char do |letter|
       if @rack.index(letter).nil?
         if blanks >= 0
           blanks -= 1
+          @word_with_blanks = @word_with_blanks.sub(letter, ' ')
         else
           return false
         end
