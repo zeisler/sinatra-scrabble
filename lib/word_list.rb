@@ -1,4 +1,4 @@
-require "Shellwords"
+
 module WordList
   def in_list?(word)
     if File.exists?('word_list.txt')
