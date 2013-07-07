@@ -1,4 +1,3 @@
-
 module WordList
   def in_list?(word)
     if File.exists?('word_list.txt')
@@ -6,7 +5,11 @@ module WordList
     else
       file = File.dirname(__FILE__)+"/word_list.txt"
     end
-    system("cat #{file} | ack '^#{Shellwords.escape(word)}\\b'")
+    if word =~ /[abc]+/
+      system("cat #{file} | ack '^#{word}\\b'")
+    else
+      return false
+    end
   end
 end
 
