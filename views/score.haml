@@ -7,7 +7,7 @@
 
 %p
   Played words:
-  - @game.played_words.each do |word|
+  - @game.played_words.reverse.each do |word|
     %ul
     - word.each_char do |letter|
       %li.btn.tile
