@@ -1,9 +1,9 @@
 module WordList
   def in_list?(word)
-    if File.exists?('word_list.txt')
-        file = "word_list.txt"
+    if File.exists?('dictionary.txt')
+        file = "dictionary.txt"
     else
-      file = File.dirname(__FILE__)+"/word_list.txt"
+      file = File.dirname(__FILE__)+"/dictionary.txt"
     end
     if word =~ /[a-z]+/
       system("cat #{file} | grep '^#{word}\\b'")

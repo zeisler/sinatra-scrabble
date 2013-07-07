@@ -10,4 +10,4 @@ gem 'yard'
 # gem 'bootstrap'
 
 # Sass libraries
-gem 'grid-coordinates', '~> 1.1.4'
+# gem 'grid-coordinates', '~> 1.1.4'

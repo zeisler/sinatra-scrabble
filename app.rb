@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'haml'
+
 require './lib/scrabble'
 require 'json'
 # Helpers
@@ -16,7 +17,7 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 # Application routes
 get '/' do
   @game = Scrabble.new
-  # @game.rack= ["c", ' ', 'b', 'b', ' ', 'g', 'e']
+  @game.rack= ["r", 'u', 'n', 'n', 'i', 'n', 'g']
   haml :index, :layout => :'layouts/application'
 end
 
