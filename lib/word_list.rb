@@ -5,8 +5,8 @@ module WordList
     else
       file = File.dirname(__FILE__)+"/word_list.txt"
     end
-    if word =~ /[abc]+/
-      system("cat #{file} | ack '^#{word}\\b'")
+    if word =~ /[a-z]+/
+      system("cat #{file} | grep '^#{word}\\b'")
     else
       return false
     end
