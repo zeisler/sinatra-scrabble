@@ -7,7 +7,7 @@
     %button{class: "btn", id: "submit_word"} Play Word
     %button{class: "btn", id: "submit_replace_word"} Replace Letters
 
-  %input{name: "scrabble[rack]", type: "hidden", value: @game.rack.to_json}
+  %input{name: "scrabble[rack]", type: "hidden", value: @game.rack.to_json, id:"rack"}
   %input{name: "scrabble[letters_bag]", type: "hidden", value: @game.letters_bag.to_json}
   %input{name: "scrabble[score_total]", type: "hidden", value: @game.score_total}
   - unless @game.played_words.nil? || @game.played_words.length == 0
@@ -16,10 +16,9 @@
   %ul.btn-toolbar#sortable{"data-toggle" => "buttons-checkbox"}
     - @game.rack.each_with_index do |letter, index|
       - if letter == " "
-        %li{"data-letter" => "", "data-index" => index, class: "ui-state-default btn btn-primary tile blank"}
-          / %input{name: "scrabble[play_word][blanks][]", type: "text", size: "1", class: "tile blank"}
+        %li{"data-letter" => "", "data-index" => index, "data-blank" => 'true', class: "ui-state-default btn btn-primary tile blank"}
       - else
-        %li{"data-letter" => letter, "data-index" => index, class: "ui-state-default btn btn-primary tile"}
+        %li{"data-letter" => letter, "data-index" => index, "data-blank" => 'false',class: "ui-state-default btn btn-primary tile"}
           = letter
     %input{name: "scrabble[play_word][word]", type: "hidden", id: "word", value: ''}
     %input{name: "scrabble[replace]", type: "hidden", id: "replace", value: ''}

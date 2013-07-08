@@ -1,16 +1,19 @@
 $().ready ->
   $('#submit_word').on 'click', (event) ->
     event.preventDefault()
-    $('#word').val(get_tiles())
+    $('#word').val(get_word_from_tiles())
+    $('#rack').val(get_rack_order())
     $('#word_form').submit()
   $('#submit_replace_word').on 'click', (event) ->
     event.preventDefault()
-    $('#replace').val(get_tiles())
+    $('#replace').val(get_word_from_tiles())
     $('#word_form').submit()
 
-  get_tiles  = (word) ->
+  get_tile = ->
+    $('#word_form').find('.tile')
+  get_word_from_tiles  = (word) ->
     word = ''
-    tiles = $('#word_form').find('.tile')
+    tiles = get_tile()
     for tile in tiles
       if $(tile).hasClass('active')
         word += $(tile).data('letter')
@@ -34,4 +37,14 @@ $().ready ->
   $('.blank').on 'click', ->
     blank_tiles(this)
 
+  get_rack_order = ->
+    tiles = get_tile()
+    rack = []
+    for tile in tiles
+      letter = $(tile).data('letter')
+      blank =  $(tile).data('blank')
+      rack[_i] =
+        letter: letter
+        blank: blank
+    return JSON.stringify rack
 
