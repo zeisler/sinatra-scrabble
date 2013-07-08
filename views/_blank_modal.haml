@@ -1,0 +1,11 @@
+#blank-modal{class: "modal hide fade", tabindex: "-1", role: "dialog", "aria-labelledby" => "myModalLabel", "aria-hidden" => "true"}
+  .modal-header
+    %button.close{"data-dismiss" =>"modal", "aria-hidden" => "true"}
+      x
+  %h3#Label
+    Enter a letter
+  .modal-body
+    %input{name: "blanks", type: "text", size: "1", class: "blank-modal"}
+
+  .modal-footer
+    %button.btn{id: "use_letter", "data-dismiss" =>"modal", "aria-hidden" => "true"} Ok

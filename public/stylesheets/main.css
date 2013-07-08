@@ -37,3 +37,8 @@ li.blank{
   width: 20px;
   padding: 5px;
 }
+.blank-box{
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}

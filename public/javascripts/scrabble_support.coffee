@@ -7,23 +7,29 @@ $().ready ->
     event.preventDefault()
     $('#replace').val(get_tiles())
     $('#word_form').submit()
+
   get_tiles  = (word) ->
     word = ''
     tiles = $('#word_form').find('.tile')
     for tile in tiles
-      if $(tile).hasClass('blank')
-        input = $(tile).find('input')
-        if $(input).val()?
-          word += $(input).val()
-      else if $(tile).hasClass('active')
+      if $(tile).hasClass('active')
         word += $(tile).data('letter')
     return word
 
   $( "#sortable" ).sortable ->
         revert: true
-  $('input.blank').on 'touchstart', ->
-    value = $(this).val()
-    input = prompt("Enter a letter", value)
-    console.log this
-    $(this).val(input)
 
+  blank_tiles = (that) ->
+    letter = $(that).html()
+    if letter != "_"
+      $(that).html("_")
+      $(that).css("text-decoration", "blink")
+    $(".blank-box").select()
+    $(document).keypress (e) ->
+      letter = String.fromCharCode(e.which)
+      $(that).html(letter)
+      $(that).attr("data-letter", letter)
+  $('.blank').on 'touchstart', ->
+    blank_tiles(this)
+  $('.blank').on 'click', ->
+    blank_tiles(this)

@@ -16,13 +16,15 @@
   %ul.btn-toolbar#sortable{"data-toggle" => "buttons-checkbox"}
     - @game.rack.each_with_index do |letter, index|
       - if letter == " "
-        %li{type:  "button", class: "ui-state-default btn btn-primary tile blank"}
-          %input{name: "scrabble[play_word][blanks][]", type: "text", size: "1", class: "tile blank"}
+        %li{"data-letter" => "", "data-index" => index, class: "ui-state-default btn btn-primary tile blank"}
+          / %input{name: "scrabble[play_word][blanks][]", type: "text", size: "1", class: "tile blank"}
       - else
         %li{"data-letter" => letter, "data-index" => index, class: "ui-state-default btn btn-primary tile"}
           = letter
     %input{name: "scrabble[play_word][word]", type: "hidden", id: "word", value: ''}
     %input{name: "scrabble[replace]", type: "hidden", id: "replace", value: ''}
+
+%input{name: "blanks", type: "text", size: "1", class: "blank-box"}
 
 %p
   Total Score
