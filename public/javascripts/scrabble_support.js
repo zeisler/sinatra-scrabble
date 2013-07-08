@@ -10,6 +10,7 @@
     });
     $('#submit_replace_word').on('click', function(event) {
       event.preventDefault();
+      $('#rack').val(get_rack_order());
       $('#replace').val(get_word_from_tiles());
       return $('#word_form').submit();
     });

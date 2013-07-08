@@ -6,6 +6,7 @@ $().ready ->
     $('#word_form').submit()
   $('#submit_replace_word').on 'click', (event) ->
     event.preventDefault()
+    $('#rack').val(get_rack_order())
     $('#replace').val(get_word_from_tiles())
     $('#word_form').submit()
 
