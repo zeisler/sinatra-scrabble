@@ -23,7 +23,7 @@ $().ready ->
     letter = $(that).html()
     if letter != "_"
       $(that).html("_")
-      $(that).css("text-decoration", "blink")
+      $(that).css("text-decoration", "underline")
     $(".blank-box").select()
     $(document).keypress (e) ->
       letter = String.fromCharCode(e.which)

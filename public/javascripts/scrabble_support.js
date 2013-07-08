@@ -34,7 +34,7 @@
       letter = $(that).html();
       if (letter !== "_") {
         $(that).html("_");
-        $(that).css("text-decoration", "blink");
+        $(that).css("text-decoration", "underline");
       }
       $(".blank-box").select();
       return $(document).keypress(function(e) {
