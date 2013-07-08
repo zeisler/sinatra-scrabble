@@ -17,7 +17,7 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 # Application routes
 get '/' do
   @game = Scrabble.new
-  # @game.rack= ["r", 'u', 'n', 'n', 'i', 'n', 'g']
+  @game.rack= ["r", ' ', 'n', 'n', 'i', 'n', 'g']
   haml :index, :layout => :'layouts/application'
 end
 

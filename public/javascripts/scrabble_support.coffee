@@ -21,4 +21,9 @@ $().ready ->
 
   $( "#sortable" ).sortable ->
         revert: true
+  $('input.blank').on 'touchstart', ->
+    value = $(this).val()
+    input = prompt("Enter a letter", value)
+    console.log this
+    $(this).val(input)
 

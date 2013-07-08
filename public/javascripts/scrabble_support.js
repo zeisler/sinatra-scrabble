@@ -29,10 +29,17 @@
       }
       return word;
     };
-    return $("#sortable").sortable(function() {
+    $("#sortable").sortable(function() {
       return {
         revert: true
       };
+    });
+    return $('input.blank').on('touchstart', function() {
+      var input, value;
+      value = $(this).val();
+      input = prompt("Enter a letter", value);
+      console.log(this);
+      return $(this).val(input);
     });
   });
 
