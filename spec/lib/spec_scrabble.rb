@@ -3,69 +3,82 @@ require 'minitest/autorun'
 require 'minitest/spec'
 
 describe "Scrabble" do
-  before do
-    @scrabble = Scrabble.new
-    @scrabble.rack= %w(c a b b a g e)
-    # params ={"play_word"=>{"bonus"=>"single", "letters"=>["c", "a", "b", "b", "a", "g", "e"]}, "rack"=>"[\"c\",\" \",\"b\",\"b\",\" \",\"g\",\"e\"]", "letters_bag"=>"[\" \",\" \",\"e\",\"e\",\"e\",\"e\",\"e\",\"e\",\"e\",\"e\",\"e\",\"e\",\"e\",\"e\",\"a\",\"a\",\"a\",\"a\",\"a\",\"a\",\"a\",\"a\",\"a\",\"i\",\"i\",\"i\",\"i\",\"i\",\"i\",\"i\",\"i\",\"i\",\"o\",\"o\",\"o\",\"o\",\"o\",\"o\",\"o\",\"o\",\"n\",\"n\",\"n\",\"n\",\"n\",\"n\",\"r\",\"r\",\"r\",\"r\",\"r\",\"r\",\"t\",\"t\",\"t\",\"t\",\"t\",\"t\",\"l\",\"l\",\"l\",\"l\",\"s\",\"s\",\"s\",\"s\",\"u\",\"u\",\"u\",\"u\",\"d\",\"d\",\"d\",\"d\",\"g\",\"g\",\"g\",\"b\",\"b\",\"c\",\"c\",\"m\",\"m\",\"p\",\"p\",\"f\",\"f\",\"h\",\"h\",\"v\",\"v\",\"w\",\"w\",\"y\",\"y\",\"k\",\"j\",\"x\",\"q\",\"z\"]", "score_total"=>"0"}
-    # params.each do |method, value|
-    #   @scrabble.send("#{method}=", value)
-    # end
-  end
   describe "play_word method" do
+    before do
+      @scrabble = Scrabble.new
+      @scrabble.rack= %w(c a b b a g e)
+    end
     it "take in arguments for letters and bonus" do
-      score =@scrabble.play_word({"bonus" => "single", "letters" => ["c", "a", "b", "b", "a", "g", "e"]})
+      score = @scrabble.play_word({"bonus" => "single", "word" => "cabbage"})
       score.must_equal 14
     end
+    it "take in arguments for bonus with double" do
+      score = @scrabble.play_word({"bonus" => "double", "word" => "cabbage"})
+      score.must_equal 28
+    end
+    it "take in arguments for bonus with triple" do
+      score = @scrabble.play_word({"bonus" => "triple", "word" => "cabbage"})
+      score.must_equal 42
+    end
+    describe "play_word and using blanks" do
+      it "can substitute a blank for a letter not in rack and score that letter as a blank" do
+        @scrabble = Scrabble.new
+        @scrabble.rack= ['r',' ', 'n','n','i','n','g']
+        score = @scrabble.play_word({"bonus" => "single", "word" => "running"})
+        score.must_equal 7
+      end
+      it "can substitute a two blanks for a letter not in rack and score those letter as a blank" do
+        @scrabble = Scrabble.new
+        @scrabble.rack= ['r',' ','n','n',' ','n','g']
+        score = @scrabble.play_word({"bonus" => "single", "word" => "running"})
+        score.must_equal 6
+      end
+    end
   end
+  describe "replace" do
+    it "takes in letters to be exchanged for other letters in the bag" do
+      @game = Scrabble.new
+      @game.rack = ["r", 'u', 'n', 'n', 'i', 'n', 'g']
+      old_rack = @game.rack
+      @game.replace "nn"
+      @game.rack.wont_equal old_rack
+    end
+    it "when replacing letters from rack they will be added back to the bag" do
+      @game = Scrabble.new
+      @game.rack = ["r", 'u', 'a', 'a', 'i', 'n', 'g']
+      @game.delete_from_letters_bag @game.rack.join
+      class Bag
+        include LetterDistributions
+      end
+      old_bag = Bag.new.letter_distributions
+      @game.replace "ng"
+      n_s = @game.letters_bag.each_index.select{|i| @game.letters_bag[i] == 'n'}.count
+      g_s =  @game.letters_bag.each_index.select{|i| @game.letters_bag[i] == 'g'}.count
+      n_s.must_equal (old_bag['n'])
+      g_s.must_equal (old_bag['g'])
+    end
+  end
+  describe "score_total" do
+    it "will keep track of the total score" do
+      @game = Scrabble.new
+      @game.rack= %w(c a b b a g e)
+      @game.delete_from_letters_bag @game.rack.join
+      @game.play_word ({"word" => "cabbage"})
+      @game.rack= %w(c a b b a g e)
+      @game.play_word ({"word" => "cabbage"})
 
-  # it "return 14 for word cabbage" do
-  #   @scrabble.score_by_rules("cabbage").must_equal 14
-  # end
-  # it "is case insensitive" do
-  #   @scrabble.play_word("CABBAGe").must_equal 14
-  # end
-  # it "can take bonus arg single" do
-  #   @scrabble.play_word("cabbage", "single").must_equal 14
-  # end
-  # it "can take bonus arg double" do
-  #     @scrabble.play_word("cabbage", "double").must_equal 28
-  # end
-  # it "can take bonus arg triple" do
-  #     @scrabble.play_word("cabbage", "triple").must_equal 42
-  # end
-  #   it "returns false for things that are not words" do
-  #     @scrabble.play_word("cabage").must_equal 'Not a valid word!'
-  # end
-  # it "removes letters from rack when word is played" do
-  #   @scrabble.rack = %w(p u a y f r e)
-  #   p_index = @scrabble.rack.index('p')
-  #   @scrabble.play_word('pay')
-  #   new_p_index = @scrabble.rack.index("p")
-  #   if @scrabble.rack.index("p")
-  #     (p_index.equal?(new_p_index)).must_equal false
-  #   else
-  #     @scrabble.rack.index("p").must_equal nil
-  #   end
-  # end
-  # it "has filled rack to 7 after played" do
-  #   @scrabble.rack = %w(p u a y f r e)
-  #   @scrabble.play_word('pay')
-  #   @scrabble.rack.length.must_equal 7
-  # end
-  # it "has removed letters from bag when added to rack" do
-  #   #these values not subtracted from bag
-  #   @scrabble.rack = %w(p u a y f r e)
-  #   @scrabble.play_word('pay')
-  #   #when word is played the rack is fill up to 7
-  #   #substacting from the bag
-  #   @scrabble.letters_bag.length.must_equal (100 - 3)
-  # end
-  # it "method in_rack can substitute a blank for a letter" do
-  #   @sub = Scrabble.new(["c", ' ', 'b', 'b,', 'a', 'g', 'e'])
-  #   @sub.in_rack?("cabbage").must_equal true
-  # end
-  # it "can play a blank for any letter" do
-  #   @game = Scrabble.new(["c", ' ', 'b', 'b', 'a', 'g', 'e'])
-  #   @game.play_word("cabbage").must_equal 13
-  # end
+      @game.score_total.must_equal 28
+    end
+  end
+  describe "played_words" do
+    it "remember all played words in a game" do
+      @game = Scrabble.new
+      @game.rack= %w(c a b b a g e)
+      @game.delete_from_letters_bag @game.rack.join
+      @game.play_word ({"word" => "cabbage"})
+      @game.rack= %w(c a b b a g e)
+      @game.play_word ({"word" => "cabbage"})
+      @game.played_words.must_equal ["cabbage", "cabbage"]
+    end
+  end
 end

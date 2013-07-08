@@ -12,22 +12,6 @@ class Scrabble
     @played_words = []
     letters_bag
     rack
-    # ,letters_bag=nil,played_words=nil,score_total=nil,new_rules=nil)
-  #   if played_words.nil?
-  #     played_words = []
-  #   else
-  #     @played_words = played_words
-  #   end
-  #   if rules.nil?
-  #
-  #   else
-  #     @rules = new_rules
-  #   end
-  #   if score_total.nil? || score_total.length == 0
-  #     @score_total = 0
-  #   else
-  #     @score_total = score_total.to_i
-  #   end
   end
   def score_total=(total)
     total = total.to_i if total.class == String
@@ -50,14 +34,20 @@ class Scrabble
   def fill_rack
     rack_size = 7
     @rack ||= []
-    #get the minimum needed to fill the rack or the min in the bag
     tiles_to_get = [@letters_bag.length, (rack_size-@rack.length)].min
-    # tiles_to_get.times do
-    #   index = rand(@letters_bag.length-1)
-    #   @rack << @letters_bag.delete_at(index)
-    # end
     @rack += @letters_bag.shuffle.take(tiles_to_get)
     return @rack
+  end
+
+  def delete_from_letters_bag(word)
+    word.each_char do |letter|
+      @letters_bag.delete_at @letters_bag.index(letter)
+    end
+  end
+  def add_to_letters_bag(word)
+    word.each_char do |letter|
+      @letters_bag << letter
+    end
   end
 
   def play_word(hash)
@@ -68,12 +58,10 @@ class Scrabble
     else
       bonus = hash["bonus"]
     end
-    puts word
     word.downcase!
     if in_list?(word)
       in_rack?(word)
       subtract_from_rack(word)
-      # word = sub_blanks(word)
       sum = score_by_rules(@word_with_blanks)
       sum *= bonus_check bonus
       @score_total += sum
@@ -106,6 +94,7 @@ class Scrabble
   def replace(word)
     subtract_from_rack(word)
     fill_rack
+    add_to_letters_bag(word)
   end
   def subtract_from_rack(word)
     blanks = blanks_in_rack
@@ -119,8 +108,6 @@ class Scrabble
       end
     end
   end
-
-
 
   def blanks_in_rack
     @rack.reduce(0) do |sum, letter|
@@ -151,26 +138,6 @@ class Scrabble
     end
     return true
   end
-
-  # def sub_blanks(word)
-  #   blanks = blanks_in_rack
-  #   index = 0
-  #   word.each_char do |letter|
-  #     if @rack.index(letter).nil?
-  #       if blanks >= 0
-  #         blanks -= 1
-  #         word[index] = " "
-  #         @rack.delete_at(find_blank)
-  #       else
-  #         return false
-  #       end
-  #     else
-  #       subtract_from_rack(letter)
-  #     end
-  #     index += 1
-  #   end
-  #   return word
-  # end
 
   private
     include WordList

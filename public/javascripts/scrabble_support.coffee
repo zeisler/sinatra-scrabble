@@ -33,3 +33,5 @@ $().ready ->
     blank_tiles(this)
   $('.blank').on 'click', ->
     blank_tiles(this)
+
+
