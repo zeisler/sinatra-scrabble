@@ -1,3 +1,9 @@
 # Scrabble
 
-```brew install ack
+## Features
+* dragable tiles to reorder the letter to make a word.
+* Full scrabble dictionary, all forms of words
+* Uses Sinatra for back-end and Javascript for display logic
+* Uses jQuery UI
+
+
